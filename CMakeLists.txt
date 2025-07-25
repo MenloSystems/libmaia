@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.6...4.0)
 project(libmaia VERSION 1.0.0 LANGUAGES CXX)
 
 if (NOT QT_VERSION_MAJOR)
