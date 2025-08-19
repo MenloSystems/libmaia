@@ -293,7 +293,14 @@ void MaiaObject::parseResponse(QString response, QNetworkReply* reply) {
 	QString errorMsg;
 	int errorLine;
 	int errorColumn;
-	if(!doc.setContent(response, &errorMsg, &errorLine, &errorColumn)) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    const auto res = doc.setContent(response);
+    errorMsg = res.errorMessage;
+    errorLine = res.errorLine;
+    if(!res) {
+#else
+    if(!doc.setContent(response, &errorMsg, &errorLine, &errorColumn)) {
+#endif
 		emit fault(-32700, QString("parse error: response not well formed at line %1: %2").arg(errorLine).arg(errorMsg), reply);
 		delete this;
 		return;
