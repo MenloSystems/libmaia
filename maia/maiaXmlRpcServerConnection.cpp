@@ -343,7 +343,11 @@ uint QHttpRequestHeader::contentLength() const
 
 QPair<QString, QString> QHttpRequestHeader::authorization() const
 {
-    QString auth = mHeaders.value("Authorization");
+    const auto authIt = std::find_if(mHeaders.constKeyValueBegin(), mHeaders.constKeyValueEnd(), [](const auto &kv) {
+        return kv.first.compare("Authorization", Qt::CaseInsensitive) == 0;
+    });
+    Q_ASSERT(authIt != mHeaders.constKeyValueEnd());
+    QString auth = authIt->second;
     Q_ASSERT(auth.startsWith("Basic "));
     auth.remove(0, 6);
     const QByteArray decoded = QByteArray::fromBase64(auth.toUtf8());
